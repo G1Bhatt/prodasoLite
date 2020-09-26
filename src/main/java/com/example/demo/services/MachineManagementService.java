@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.entity.MachineDetailsEntity;
+import com.example.demo.enums.MachineStatus;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.repo.reposervice.MachineManagementRepoService;
 import com.example.demo.request.MachineAdditionRequest;
@@ -80,6 +81,7 @@ public class MachineManagementService {
 
     /**
      * method to get the details of a perticular machine from serial number.
+     *
      * @param serialId
      * @return
      */
@@ -94,7 +96,8 @@ public class MachineManagementService {
     }
 
     /**
-     *  method to update the info of the machine.
+     * method to update the info of the machine.
+     *
      * @param machineAdditionRequest
      * @return
      * @throws NotFoundException
@@ -109,7 +112,11 @@ public class MachineManagementService {
             throw new NotFoundException("Machine does not exist");
         } else {
             machineDetailsEntity.setMachineName(machineAdditionRequest.getName());
-            machineDetailsEntity.setMachineStatus(machineAdditionRequest.getMachineStatus());
+            if (machineAdditionRequest.getMachineStatus() == null) {
+                machineDetailsEntity.setMachineStatus(MachineStatus.STANDBY);
+            } else {
+                machineDetailsEntity.setMachineStatus(machineAdditionRequest.getMachineStatus());
+            }
             machineDetailsEntity = machineManagementRepoService.updateEntity(machineDetailsEntity);
             log.info("Machine data updated successfully : " + machineDetailsEntity);
         }
@@ -117,7 +124,8 @@ public class MachineManagementService {
     }
 
     /**
-     *  method to delete the machine from the database;
+     * method to delete the machine from the database;
+     *
      * @param serialId
      * @throws NotFoundException
      */

@@ -2,8 +2,8 @@ package com.example.demo.request;
 
 import com.example.demo.enums.MachineStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.istack.NotNull;
 import lombok.Data;
+import lombok.NonNull;
 
 import java.io.Serializable;
 
@@ -15,15 +15,15 @@ public class MachineAdditionRequest implements Serializable {
      */
     private static final long serialVersionUID = 5374919733382058937L;
 
-    @NotNull
+    @NonNull
     @JsonProperty("machine_name")
     private String name;
 
-    @NotNull
+    @NonNull
     @JsonProperty("status")
     private MachineStatus machineStatus;
 
-    @NotNull
+    @NonNull
     @JsonProperty("serial_no")
     private Long serialNumber;
 
