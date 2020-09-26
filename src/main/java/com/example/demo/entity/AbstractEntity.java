@@ -28,7 +28,7 @@ public abstract class AbstractEntity<T> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "created_at", nullable = false)
     private Long createdAt;
