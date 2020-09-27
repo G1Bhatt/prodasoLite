@@ -6,6 +6,7 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.repo.reposervice.MachineManagementRepoService;
 import com.example.demo.request.MachineAdditionRequest;
 import com.example.demo.response.MachineDetailsResponse;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,8 @@ public class MachineManagementService {
      * @param machineAdditionRequest
      * @return
      */
-    public MachineDetailsResponse addMachine(MachineAdditionRequest machineAdditionRequest) {
+    public MachineDetailsResponse addMachine(
+            @NonNull final MachineAdditionRequest machineAdditionRequest) {
         Long serialNumber = machineAdditionRequest.getSerialNumber();
         MachineDetailsEntity
                 machineDetailsEntity =
@@ -38,10 +40,8 @@ public class MachineManagementService {
         } else {
             log.info("machine already exists :" + machineDetailsEntity);
         }
-        MachineDetailsResponse
-                machineDetailsResponse =
-                new MachineDetailsResponse(machineDetailsEntity);
-        return machineDetailsResponse;
+        return new MachineDetailsResponse(machineDetailsEntity);
+
     }
 
     /**
@@ -54,6 +54,7 @@ public class MachineManagementService {
         machineDetailsEntity = new MachineDetailsEntity();
         machineDetailsEntity.setMachineName(machineAdditionRequest.getName());
         machineDetailsEntity.setSerialNumber(machineAdditionRequest.getSerialNumber());
+        machineDetailsEntity.setMachineStatus(MachineStatus.STANDBY);
         machineDetailsEntity = machineManagementRepoService.createEntity(machineDetailsEntity);
         return machineDetailsEntity;
     }
@@ -69,12 +70,7 @@ public class MachineManagementService {
                 machineDetailsEntities =
                 machineManagementRepoService.getAllEntities();
         for (MachineDetailsEntity machineDetailsEntity : machineDetailsEntities) {
-            MachineDetailsResponse machineDetailsResponse = new MachineDetailsResponse();
-            machineDetailsResponse.setId(machineDetailsEntity.getId());
-            machineDetailsResponse.setMachineStatus(machineDetailsEntity.getMachineStatus());
-            machineDetailsResponse.setName(machineDetailsEntity.getMachineName());
-            machineDetailsResponse.setSerialNumber(machineDetailsEntity.getSerialNumber());
-            machineDetailsResponseList.add(machineDetailsResponse);
+            machineDetailsResponseList.add(new MachineDetailsResponse(machineDetailsEntity));
         }
         return machineDetailsResponseList;
     }
@@ -85,7 +81,8 @@ public class MachineManagementService {
      * @param serialId
      * @return
      */
-    public MachineDetailsResponse getMachineInfo(Long serialId) throws NotFoundException {
+    public MachineDetailsResponse getMachineInfo(@NonNull final Long serialId)
+            throws NotFoundException {
         MachineDetailsEntity
                 machineDetailsEntity =
                 machineManagementRepoService.getMachineBySerialNumber(serialId);
@@ -102,8 +99,8 @@ public class MachineManagementService {
      * @return
      * @throws NotFoundException
      */
-    public MachineDetailsResponse updateMachineInfo(MachineAdditionRequest machineAdditionRequest)
-            throws NotFoundException {
+    public MachineDetailsResponse updateMachineInfo(
+            @NonNull final MachineAdditionRequest machineAdditionRequest) throws NotFoundException {
         MachineDetailsEntity
                 machineDetailsEntity =
                 machineManagementRepoService
@@ -129,7 +126,7 @@ public class MachineManagementService {
      * @param serialId
      * @throws NotFoundException
      */
-    public void deleteMachineWithId(Long serialId) throws NotFoundException {
+    public void deleteMachineWithId(@NonNull final Long serialId) throws NotFoundException {
         MachineDetailsEntity
                 machineDetailsEntity =
                 machineManagementRepoService.getMachineBySerialNumber(serialId);
